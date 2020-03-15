@@ -1,10 +1,7 @@
 package com.github.scaars10;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.*;
+
 
 public class InputGrammar {
     HashMap<Character, ArrayList<String>> grammar = new HashMap<Character, ArrayList<String>>();
@@ -12,17 +9,27 @@ public class InputGrammar {
     void addProduction(String production){
 
         Character nT = production.split("-")[0].charAt(0);
-        String prod = production.split(" ")[1];
-        String[] productions = prod.split("|");
+        String prod = production.split("-")[1];
+        String[] productions = prod.split("!");
         grammar.computeIfAbsent(nT, k -> new ArrayList<>())
                 .addAll(Arrays.asList(productions));
 
     }
 
+    void viewGrammar(){
+        System.out.println("Size of grammar is "+grammar.size());
+
+        for (Map.Entry<Character, ArrayList<String>> entry : grammar.entrySet()) {
+            ArrayList<String> vec = entry.getValue();
+            Character k = entry.getKey();
+
+            for (String s : vec){
+                System.out.println(k+" -> "+s);
+            }
+        };
+    }
     boolean isNonTerminal(Character c){
-        if(c>='A' && c<='Z')
-            return true;
-        return false;
+        return c >= 'A' && c <= 'Z';
     }
     String findValidProduction(Character token, Character nT){
         ArrayList<String> vec = grammar.get(nT);

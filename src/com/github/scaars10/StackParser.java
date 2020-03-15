@@ -13,16 +13,32 @@ public class StackParser {
         stack.push(startState);
         while(ptr<str.length()){
             Character token = str.charAt(ptr);
-            Character nT = stack.peek();
-            if(grammar.isNonTerminal(nT)){
+            Character nT = stack.pop();
+            //System.out.println(nT);
+
+            if(nT==endOfStack)
+                return false;
+
+            if(!grammar.isNonTerminal(nT)){
                 if(nT==token){
                     ptr++;
-                    stack.pop();
+
                     continue;
                 }
                 return false; //String cannot be generated
             }
-            String grammar.findValidProduction(token, nT);
+
+            String prod = grammar.findValidProduction(token, nT);
+            if(prod==null)
+                return false;
+
+            //System.out.println(prod);
+            for(int i=prod.length()-1;i>0; i--){
+                stack.push(prod.charAt(i));
+            }
+            ptr++;
+
         }
+        return stack.peek() == endOfStack;
     }
 }
